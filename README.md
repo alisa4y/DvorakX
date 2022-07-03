@@ -5,7 +5,7 @@ this project is a low level keyboard hooker to control mapping keys from qwerty 
 
 the layout looks like this
 
-![dvorakX layout](images/layout.png?raw=true "layout")
+![dvorakX layout](./layout.png?raw=true "layout")
 
 # some features : 
 pressing ctrl or win key the program will not map the next keys to dvorak (so no more problems with copy, paste 😍)
