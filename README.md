@@ -1,11 +1,11 @@
 # DvorakX
 this layout is useful for programmers
 
-this project is a low level keyboard hooker to controlling mapping keys from qwerty to dvorak layout with additional programming character(s) and some functionality
+this project is a low level keyboard hooker to control mapping keys from qwerty to dvorak layout with additional programming character(s) and some functionality
 
 the layout looks like this
 
-![alt text](images/layout.png?raw=true "layout")
+![dvorakX layout](images/layout.png?raw=true "layout")
 
 # some features : 
 pressing ctrl or win key the program will not map the next keys to dvorak (so no more problems with copy, paste 😍)
