@@ -7,6 +7,10 @@ the layout looks like this it is set for javascript you change the key mapping i
 
 ![dvorakX layout](./layout.png?raw=true "layout")
 
+# install 
+ download DvorakX.exe from "x64/Release/Dvorak.exe"
+ simply click on it and hopefully it will work 😁😁
+
 # some features : 
 pressing ctrl or win key the program will not map the next keys to dvorak (so no more problems with copy, paste 😍)
 
