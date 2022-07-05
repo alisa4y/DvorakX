@@ -62,9 +62,6 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 			break;
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
-			if (key == VK_CAPITAL && GetKeyState(VK_LMENU) & 0x8000) {
-				sendKey(VK_BACK);
-			}
 			if (mapKeyUp.count(key)) {
 				mapKeyUp[key]();
 			}

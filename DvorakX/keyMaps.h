@@ -65,7 +65,7 @@ map<char, void (*)()> mapSpecialKeys{
 	{'Q', [] {sendSKey(222); }}
 };
 map<char, void (*)()> mapConsumers{
-	{VK_LMENU, [] {xKeyDown = true; }},
+	{VK_LMENU, [] { xKeyDown = true; }},
 	{VK_CAPITAL, [] {sendCKey(VK_BACK); }},
 	{VK_RMENU, [] {sendInputDown(VK_RCONTROL); } },
 	{VK_RCONTROL, [] {sendInputDown(VK_LMENU); } },
@@ -77,14 +77,14 @@ map<char, void (*)()> mapConsumers{
 };
 map<char, void (*)()> mapShiftedKeys{
 	//{219, [] {sendUsKey(191); }}, // / 
-	{222, [] {sendKey(191); }},
+	{222, [] {sendUsKey(187); sendKey(VK_SPACE); }},
 	{'Q', [] {sendUsKey(222); }},
 	{VK_CAPITAL, [] {sendKey(VK_CAPITAL); }}
 };
 map<char, void (*)()> mapXKeys{
 	{'Q', [] {sendKey(192); }  },
 	{'W',[] {sendSKey(49); } },
-	{'E',[] {sendKey(VK_UP); } },
+	{'E',[] {sendKey(VK_UP);  if (GetKeyState(VK_MENU) & 0x8000) sendKey(VK_BACK); } },
 	{'R',[] {sendSKey(51); } },
 	{'T',[] {sendSKey(54); } },
 	{'Y',[] {sendKey(220); } },
@@ -96,9 +96,9 @@ map<char, void (*)()> mapXKeys{
 	{221,[] {sendSKey(53); } },
 
 	{'A',[] {sendKey(VK_HOME); } },
-	{'S',[] {sendKey(VK_LEFT); } },
-	{'D',[] {sendKey(VK_DOWN); } },
-	{'F',[] {sendKey(VK_RIGHT); } },
+	{'S',[] {sendKey(VK_LEFT); if (GetKeyState(VK_MENU) & 0x8000) sendKey(VK_BACK); } },
+	{'D',[] {sendKey(VK_DOWN); if (GetKeyState(VK_MENU) & 0x8000) sendKey(VK_BACK); } },
+	{'F',[] {sendKey(VK_RIGHT); if (GetKeyState(VK_MENU) & 0x8000) sendKey(VK_BACK); } },
 	{'G',[] {sendKey(VK_SUBTRACT); } }, // -
 	{'H',[] {sendKey(VK_ADD); } },
 	{'J',[] {sendSKey(57); } },
@@ -122,7 +122,7 @@ map<char, void (*)()> mapXKeys{
 	{VK_CAPITAL,[] {sendInputDown(VK_LMENU); } },
 	{VK_RMENU, [] {sendInputDown(VK_RCONTROL); }},
 	{VK_RETURN,[] {sendKeys(&ret); } },
-
+	{VK_LMENU, [] { xKeyDown = true; }},
 };
 //map<char, void (*)()> mapCtrlKeys{
 //	{191, [] {sendKey(191); }}
