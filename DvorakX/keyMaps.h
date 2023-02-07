@@ -17,6 +17,7 @@ void stopHook() {
 	//Beep(800, 200);
 }
 void startHook() {
+	if(hook) sendKey(VK_SPACE);
 	hook = true;
 	//Beep(300, 400);
 }
@@ -34,7 +35,7 @@ map<char, WORD> mapKeys{
 	{'O','R'},
 	{'P','L'},
 	{219, 191}, // [
-	{221,VK_END}, // [
+	{221,VK_END}, // ]
 
 	//{'A','A'},
 	{'S','O'},
@@ -65,20 +66,23 @@ map<char, void (*)()> mapSpecialKeys{
 	{'Q', [] {sendSKey(222); }}
 };
 map<char, void (*)()> mapConsumers{
-	{VK_LMENU, [] { xKeyDown = true; }},
+	{VK_LMENU, [] { xKeyDown = true;}},
 	{VK_CAPITAL, [] {sendCKey(VK_BACK); }},
 	{VK_RMENU, [] {sendInputDown(VK_RCONTROL); } },
 	{VK_RCONTROL, [] {sendInputDown(VK_LMENU); } },
-	{VK_LSHIFT, [] {if (!shiftDown) { shiftDown = true; sendInputDown(VK_SHIFT); } }},
-	{VK_RSHIFT, [] {if (!shiftDown) { shiftDown = true; sendInputDown(VK_SHIFT); } }},
+	{VK_LSHIFT, [] { sendInputDown(VK_SHIFT); }}, // to control shift pressing without being sent to a thread and be able to send keyUp for shift
+	{VK_RSHIFT, [] { sendInputDown(VK_SHIFT); }},
+
+	/*{VK_LSHIFT, [] {if (!shiftDown) { shiftDown = true; sendInputDown(VK_SHIFT); } }},
+	{VK_RSHIFT, [] {if (!shiftDown) { shiftDown = true; sendInputDown(VK_SHIFT); } }},*/
 	/*{VK_LCONTROL, [] {if (!ctrlDown) { ctrlDown = true; sendInputDown(VK_CONTROL); } }},
 	{VK_RCONTROL, [] {if (!ctrlDown) { ctrlDown = true; sendInputDown(VK_CONTROL); } }},*/
 
 };
 map<char, void (*)()> mapShiftedKeys{
 	//{219, [] {sendUsKey(191); }}, // / 
-	{222, [] {sendUsKey(187); sendKey(VK_SPACE); }},
-	{'Q', [] {sendUsKey(222); }},
+	//{222, [] {sendUsKey(187); sendKey(VK_SPACE); }}, // = 
+	{'Q', [] {sendUsKey(222); }},  // '
 	{VK_CAPITAL, [] {sendKey(VK_CAPITAL); }}
 };
 map<char, void (*)()> mapXKeys{
@@ -88,9 +92,9 @@ map<char, void (*)()> mapXKeys{
 	{'R',[] {sendSKey(51); } },
 	{'T',[] {sendSKey(54); } },
 	{'Y',[] {sendKey(220); } },
-	{'U',[] {sendSKey(49); sendKey(187); sendKey(187); }},
-	{'I',[] {sendSKey(220); sendSKey(220); } },
-	{'O',[] {sendKey(187); sendSKey(190); } },
+	{'U',[] {sendKey(VK_SPACE); sendSKey(49); sendKey(187); sendKey(187); sendKey(VK_SPACE); }},
+	{'I',[] {sendKey(VK_SPACE); sendSKey(220); sendSKey(220); sendKey(VK_SPACE); } },
+	{'O',[] {sendKey(VK_SPACE); sendKey(187); sendSKey(190); sendKey(VK_SPACE); } },
 	{'P',[] {sendSKey(189); } },
 	{219,[] {sendSKey(52); }}, // [
 	{221,[] {sendSKey(53); } },
@@ -104,15 +108,15 @@ map<char, void (*)()> mapXKeys{
 	{'J',[] {sendSKey(57); } },
 	{'K',[] {sendSKey(219); } }, // {
 	{'L',[] {sendKey(219); } }, // [
-	{186 ,[] {sendKey(187); sendKey(187); sendKey(187); } },  // ;
+	{186 ,[] {sendKey(VK_SPACE); sendKey(187); sendKey(187); sendKey(187); sendKey(VK_SPACE); } },  // ;
 	{222, [] {sendCKey(VK_DELETE); } }, //  ` 
 
 	{'Z',[] {stopHook(); }},
 	{'X',[] {sendSKey(220); } },
-	{'C',[] { sendKey(VK_SUBTRACT); sendSKey(190); }},
+	{'C',[] {sendKey(VK_SUBTRACT); sendSKey(190); }},
 	{'V',[] {sendSKey(56); } },
 	{'B',[] {sendSKey(55); } },
-	{'N',[] {sendSKey(55); sendSKey(55); } },
+	{'N',[] {sendKey(VK_SPACE); sendSKey(55); sendSKey(55); sendKey(VK_SPACE); } },
 	{'M',[] {sendSKey(48); } },
 	{188,[] {sendSKey(221); } },
 	{190,[] {sendKey(221); } },
@@ -123,6 +127,8 @@ map<char, void (*)()> mapXKeys{
 	{VK_RMENU, [] {sendInputDown(VK_RCONTROL); }},
 	{VK_RETURN,[] {sendKeys(&ret); } },
 	{VK_LMENU, [] { xKeyDown = true; }},
+	{VK_LSHIFT, [] { sendInputDown(VK_LSHIFT); }},
+	{VK_SPACE, [] { startHook(); }},
 };
 //map<char, void (*)()> mapCtrlKeys{
 //	{191, [] {sendKey(191); }}
@@ -133,8 +139,8 @@ map<char, void (*)()> mapKeyUp{
 	{VK_RMENU, [] {sendInputUp(VK_RCONTROL); } },
 	{VK_RCONTROL, [] {sendInputUp(VK_LMENU); } },
 
-	{VK_LSHIFT, [] { shiftDown = false; sendInputUp(VK_SHIFT); }},
-	{VK_RSHIFT, [] { shiftDown = false; sendInputUp(VK_SHIFT); } },
+	{VK_LSHIFT, [] { sendInputUp(VK_SHIFT); }},
+	{VK_RSHIFT, [] { sendInputUp(VK_SHIFT); } },
 	/*{VK_LCONTROL, [] { ctrlDown = false; sendInputUp(VK_CONTROL); } },
 	{VK_RCONTROL, [] { ctrlDown = false; sendInputUp(VK_CONTROL); } },*/
 
