@@ -9,7 +9,13 @@ bool hook = true;
 bool xKeyDown = false;
 bool shiftDown = false;
 bool ctrlDown = false;
+bool cmsTrigger = false;
 vector<WORD> ret{ 'R','E','T','U','R','N',VK_SPACE };
+vector<WORD> elseS{ 'E','L','S','E',VK_SPACE };
+vector<WORD> trueS{ 'T','R','U','E' };
+vector<WORD> falseS{ 'F','A','L','S','E' };
+vector<WORD> breakS{ 'B','R','E','A','K' };
+vector<WORD> continueS{ 'C','O','N','T','I','N','U','E' };
 
 void stopHook() {
 	hook = false;
@@ -17,7 +23,7 @@ void stopHook() {
 	//Beep(800, 200);
 }
 void startHook() {
-	if(hook) sendKey(VK_SPACE);
+	if (hook) sendKey(VK_SPACE);
 	hook = true;
 	//Beep(300, 400);
 }
@@ -47,7 +53,7 @@ map<char, WORD> mapKeys{
 	{'K','T'},
 	{'L','N'},
 	{186 ,'S'},  // ;
-	{222,187},
+	//{222,187},
 
 	{'Z',186},
 	{'X','Q'},
@@ -60,18 +66,23 @@ map<char, WORD> mapKeys{
 	{190,'V'}, // .
 	{191, 'Z'},
 
+	{187, 221}, // =
+	{189, 219}, // -
+
+	{VK_F1, VK_F2},
 };
-map<char, void (*)()> mapSpecialKeys{
+map<char, void (*)()> mapKeysFn{
 	//{219, [] {sendSKey(52); }}, // [  to $
+	{222, [] { cmsTrigger = true;  }},
 	{'Q', [] {sendSKey(222); }}
 };
 map<char, void (*)()> mapConsumers{
-	{VK_LMENU, [] { xKeyDown = true;}},
+	{VK_LMENU, [] { xKeyDown = true; }},
 	{VK_CAPITAL, [] {sendCKey(VK_BACK); }},
 	{VK_RMENU, [] {sendInputDown(VK_RCONTROL); } },
 	{VK_RCONTROL, [] {sendInputDown(VK_LMENU); } },
 	{VK_LSHIFT, [] { sendInputDown(VK_SHIFT); }}, // to control shift pressing without being sent to a thread and be able to send keyUp for shift
-	{VK_RSHIFT, [] { sendInputDown(VK_SHIFT); }},
+	{VK_RSHIFT, [] { sendInputDown(VK_SHIFT); }}
 
 	/*{VK_LSHIFT, [] {if (!shiftDown) { shiftDown = true; sendInputDown(VK_SHIFT); } }},
 	{VK_RSHIFT, [] {if (!shiftDown) { shiftDown = true; sendInputDown(VK_SHIFT); } }},*/
@@ -81,8 +92,9 @@ map<char, void (*)()> mapConsumers{
 };
 map<char, void (*)()> mapShiftedKeys{
 	//{219, [] {sendUsKey(191); }}, // / 
-	//{222, [] {sendUsKey(187); sendKey(VK_SPACE); }}, // = 
+	{222, [] { sendInputUp(VK_SHIFT); sendKeys(&trueS); }}, // 
 	{'Q', [] {sendUsKey(222); }},  // '
+	//{VK_TAB, [] {sendKey(VK_TAB); sendUsKey(VK_RIGHT); }},
 	{VK_CAPITAL, [] {sendKey(VK_CAPITAL); }}
 };
 map<char, void (*)()> mapXKeys{
@@ -93,8 +105,8 @@ map<char, void (*)()> mapXKeys{
 	{'T',[] {sendSKey(54); } },
 	{'Y',[] {sendKey(220); } },
 	{'U',[] {sendKey(VK_SPACE); sendSKey(49); sendKey(187); sendKey(187); sendKey(VK_SPACE); }},
-	{'I',[] {sendKey(VK_SPACE); sendSKey(220); sendSKey(220); sendKey(VK_SPACE); } },
-	{'O',[] {sendKey(VK_SPACE); sendKey(187); sendSKey(190); sendKey(VK_SPACE); } },
+	{'I',[] {sendKey(VK_SPACE); sendSKey(220); sendSKey(220); sendKey(VK_SPACE); }},
+	{'O',[] {sendKeys(&falseS); } },
 	{'P',[] {sendSKey(189); } },
 	{219,[] {sendSKey(52); }}, // [
 	{221,[] {sendSKey(53); } },
@@ -105,23 +117,22 @@ map<char, void (*)()> mapXKeys{
 	{'F',[] {sendKey(VK_RIGHT); if (GetKeyState(VK_MENU) & 0x8000) sendKey(VK_BACK); } },
 	{'G',[] {sendKey(VK_SUBTRACT); } }, // -
 	{'H',[] {sendKey(VK_ADD); } },
-	{'J',[] {sendSKey(57); } },
+	{'J',[] {sendSKey(57); } }, // (
 	{'K',[] {sendSKey(219); } }, // {
 	{'L',[] {sendKey(219); } }, // [
-	{186 ,[] {sendKey(VK_SPACE); sendKey(187); sendKey(187); sendKey(187); sendKey(VK_SPACE); } },  // ;
+	{186 ,[] {sendKey(VK_SPACE); sendKey(187); sendKey(187); sendKey(187); sendKey(VK_SPACE); }},  // ;
 	{222, [] {sendCKey(VK_DELETE); } }, //  ` 
 
 	{'Z',[] {stopHook(); }},
 	{'X',[] {sendSKey(220); } },
-	{'C',[] {sendKey(VK_SUBTRACT); sendSKey(190); }},
+	{'C',[] {sendKey(VK_SUBTRACT); sendSKey(190); }}, // ->
 	{'V',[] {sendSKey(56); } },
 	{'B',[] {sendSKey(55); } },
-	{'N',[] {sendKey(VK_SPACE); sendSKey(55); sendSKey(55); sendKey(VK_SPACE); } },
+	{'N',[] {sendKey(VK_SPACE); sendSKey(55); sendSKey(55); sendKey(VK_SPACE); }},
 	{'M',[] {sendSKey(48); } },
 	{188,[] {sendSKey(221); } },
 	{190,[] {sendKey(221); } },
-	{191, [] {sendSKey(50); } }, //  
-
+	{191, [] {sendSKey(50); } },
 
 	{VK_CAPITAL,[] {sendInputDown(VK_LMENU); } },
 	{VK_RMENU, [] {sendInputDown(VK_RCONTROL); }},
@@ -134,7 +145,14 @@ map<char, void (*)()> mapXKeys{
 //	{191, [] {sendKey(191); }}
 //};
 map<char, void (*)()> mapKeyUp{
-	{VK_LMENU, [] {xKeyDown = false; sendInputUp(VK_MENU); }},
+	{222, [] { if (cmsTrigger) {
+		sendKey(187);  cmsTrigger = false;
+		 }
+		else {
+			sendCMSUp();
+		}
+	}},
+	{VK_LMENU, [] {xKeyDown = false; if (cmsDown)sendCMSUp(); sendInputUp(VK_MENU); }},
 	{VK_CAPITAL, [] {sendInputUp(VK_LMENU);  }},
 	{VK_RMENU, [] {sendInputUp(VK_RCONTROL); } },
 	{VK_RCONTROL, [] {sendInputUp(VK_LMENU); } },
@@ -142,7 +160,6 @@ map<char, void (*)()> mapKeyUp{
 	{VK_LSHIFT, [] { sendInputUp(VK_SHIFT); }},
 	{VK_RSHIFT, [] { sendInputUp(VK_SHIFT); } },
 	/*{VK_LCONTROL, [] { ctrlDown = false; sendInputUp(VK_CONTROL); } },
-	{VK_RCONTROL, [] { ctrlDown = false; sendInputUp(VK_CONTROL); } },*/
-
+	{VK_RCONTROL, [] { ctrlDown = false; sendInputUp(VK_CONTROL); } */
 };
 

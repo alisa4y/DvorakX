@@ -100,3 +100,16 @@ void sendAKey(WORD key) {
     sendKey(key);
     sendInputUp(VK_MENU);
 }
+bool cmsDown = false;
+void sendCMSDown() {
+    sendInputDown(VK_CONTROL);
+    sendInputDown(VK_SHIFT);
+    sendInputDown(VK_MENU);
+    cmsDown = true;
+}
+void sendCMSUp() {
+    sendInputUp(VK_CONTROL);
+    sendInputUp(VK_SHIFT);
+    sendInputUp(VK_MENU);
+    cmsDown = false;
+}
